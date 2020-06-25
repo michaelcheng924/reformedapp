@@ -9,6 +9,7 @@ import Modal from "react-native-modal";
 import CONFESSIONS from "../constants/confessions";
 import AppText from "../components/AppText";
 import ChangeConfession from "../components/ChangeConfession";
+import ChangeChapter from "../components/ChangeChapter";
 import ScripturesModal from "../components/ScripturesModal";
 
 let scrollView;
@@ -41,7 +42,7 @@ function ConfessionsScreen({ confession, font, setConfession, size }) {
           marginBottom: 10,
         }}
       >
-        {chapterIndex > 0 ? (
+        {previousChapter ? (
           <TouchableOpacity
             onPress={() => {
               setChapterIndex(chapterIndex - 1);
@@ -69,7 +70,7 @@ function ConfessionsScreen({ confession, font, setConfession, size }) {
             flexGrow: 1,
           }}
         />
-        {chapterIndex < selectedConfession.content.length ? (
+        {nextChapter ? (
           <TouchableOpacity
             onPress={() => {
               setChapterIndex(chapterIndex + 1);
@@ -226,12 +227,13 @@ function ConfessionsScreen({ confession, font, setConfession, size }) {
             setSelectChapter(false);
           }}
         >
-          <ChangeConfession
-            confession={confession}
+          <ChangeChapter
+            chapterIndex={chapterIndex}
+            selectedConfession={selectedConfession}
             font={font}
             setConfession={setConfession}
             setChapterIndex={setChapterIndex}
-            setSelectConfession={setSelectConfession}
+            setSelectChapter={setSelectChapter}
             size={size}
           />
         </Modal>

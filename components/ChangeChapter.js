@@ -6,7 +6,7 @@ import AppText from "./AppText";
 
 const ChangeChapter = ({
   chapterIndex,
-  confession,
+  selectedConfession,
   font,
   setChapterIndex,
   setSelectChapter,
@@ -16,7 +16,7 @@ const ChangeChapter = ({
     <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => {
-          setSelectConfession(false);
+          setSelectChapter(false);
         }}
       >
         <Entypo
@@ -32,7 +32,7 @@ const ChangeChapter = ({
         <AppText font={font} bold size={20}>
           Select Chapter
         </AppText>
-        {confession.content.map((item, index) => {
+        {selectedConfession.content.map((item, index) => {
           return (
             <TouchableOpacity
               key={index}
@@ -40,14 +40,17 @@ const ChangeChapter = ({
                 setChapterIndex(index);
                 setSelectChapter(false);
               }}
+              style={{
+                marginTop: 8,
+              }}
             >
               <AppText
-                bold
+                bold={chapterIndex === index}
                 color={chapterIndex === index ? "#9A51B0" : "#4d5156"}
                 font={font}
                 size={size + 4}
               >
-                {item.title}
+                {item.chapter}. {item.title}
               </AppText>
             </TouchableOpacity>
           );
@@ -65,11 +68,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   selectCatechism: {
-    alignItems: "center",
-    display: "flex",
     marginTop: 10,
     paddingLeft: 20,
     paddingRight: 20,
+    paddingBottom: 20,
   },
 });
 

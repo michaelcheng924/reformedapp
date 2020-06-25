@@ -35,6 +35,13 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
     setAnswerValue("");
   }, [catechismIndex]);
 
+  useEffect(() => {
+    _confettiView.stopConfetti();
+    setIsAnswered(false);
+    setShowAnswer(false);
+    setAnswerValue("");
+  }, [catechism]);
+
   const selectedCatechism = CATECHISMS[Number(catechism)];
   const currentQuestion = selectedCatechism.content[catechismIndex];
 
