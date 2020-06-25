@@ -7,7 +7,9 @@ export default {
       path: "root",
       screens: {
         Catechisms: "Catechisms",
+        Confessions: "Confessions",
         Settings: "Settings",
+        About: "About",
       },
     },
   },

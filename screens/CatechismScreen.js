@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import each from "lodash/each";
 import isArray from "lodash/isArray";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import Confetti from "react-native-confetti";
@@ -16,6 +16,7 @@ import ScripturesModal from "../components/ScripturesModal";
 import ChangeCatechism from "../components/ChangeCatechism";
 import Navigation from "../components/Navigation";
 
+let scrollView;
 let _confettiView;
 
 function getStrippedText(text) {
@@ -30,12 +31,24 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
   const [isAnswered, setIsAnswered] = useState(false);
   const [scriptures, setScriptures] = useState(null);
 
+  useEffect(() => {
+    setAnswerValue("");
+  }, [catechismIndex]);
+
   const selectedCatechism = CATECHISMS[Number(catechism)];
   const currentQuestion = selectedCatechism.content[catechismIndex];
 
-  const finalAnswer = currentQuestion.answer.map((item) => item.text).join(" ");
-  const answerStripped = getStrippedText(answerValue);
-  const finalAnswerStripped = getStrippedText(finalAnswer);
+  const finalAnswer = currentQuestion.answer
+    .map((item) => {
+      if (isArray(item)) {
+        return item.map((item1) => item1.text).join(" ");
+      }
+
+      return item.text;
+    })
+    .join(" ");
+  const answerStripped = getStrippedText(answerValue.replace(/-/g, " "));
+  const finalAnswerStripped = getStrippedText(finalAnswer.replace(/-/g, " "));
 
   let correctLastIndex;
   let isMatch = true;
@@ -59,12 +72,14 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
     if (answerStripped.length === finalAnswerStripped.length && isMatch) {
       setIsAnswered(true);
       setShowAnswer(true);
+      scrollView.scrollTo({ x: 0, y: 0 });
       _confettiView.startConfetti();
     }
   }
 
   return (
     <ScrollView
+      ref={(node) => (scrollView = node)}
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
@@ -130,201 +145,235 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
             selectedCatechism={selectedCatechism}
             setCatechismIndex={setCatechismIndex}
           />
-        </View>
-        <View style={styles.questionSection}>
-          <View style={styles.questionText}>
-            <AppText font={font} size={size + 10}>
-              {catechismIndex + 1}. {currentQuestion.question}
-            </AppText>
-          </View>
-          {isAnswered ? null : (
-            <AppTextInput
-              font={font}
-              placeholder="Enter the answer here"
-              setValue={setAnswerValue}
-              size={size + 2}
-              style={{
-                marginTop: 10,
-                width: "100%",
-              }}
-              value={answerValue}
-            />
-          )}
-          {answerStripped && !isAnswered ? (
-            <View style={styles.answerGreenRed}>
-              <AppText font={font}>
-                <AppText bold color="green" font={font}>
-                  {answerStripped.slice(0, correctLastIndex + 1)}
-                </AppText>
-                <AppText bold color="red" font={font}>
-                  {answerStripped.slice(correctLastIndex + 1)}
-                </AppText>
+          <View style={styles.questionSection}>
+            <View style={styles.questionText}>
+              <AppText font={font} size={size + 10}>
+                {catechismIndex + 1}. {currentQuestion.question}
               </AppText>
             </View>
-          ) : null}
-          {isAnswered ? null : (
-            <View style={styles.toggleAnswer}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowAnswer(!showAnswer);
+            {isAnswered ? null : (
+              <AppTextInput
+                font={font}
+                placeholder="Enter the answer here"
+                setValue={setAnswerValue}
+                size={size + 2}
+                style={{
+                  marginTop: 10,
+                  width: "100%",
                 }}
-              >
-                <AppText color="#489D89" font={font} size={size}>
-                  {showAnswer ? "Hide" : "Show"} Answer
-                </AppText>
-              </TouchableOpacity>
-            </View>
-          )}
-          {showAnswer && (
-            <View style={styles.answer}>
-              <View style={styles.answerHeading}>
-                <AppText bold font={font} size={size}>
-                  Answer
+                value={answerValue}
+              />
+            )}
+            {answerStripped && !isAnswered ? (
+              <View style={styles.answerGreenRed}>
+                <AppText font={font}>
+                  <AppText bold color="green" font={font}>
+                    {answerStripped.slice(0, correctLastIndex + 1)}
+                  </AppText>
+                  <AppText bold color="red" font={font}>
+                    {answerStripped.slice(correctLastIndex + 1)}
+                  </AppText>
                 </AppText>
               </View>
-              <AppText font={font} size={size}>
-                {currentQuestion.answer.map((item, index) => {
-                  if (isArray(item)) {
+            ) : null}
+            {isAnswered ? null : (
+              <View style={styles.toggleAnswer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowAnswer(!showAnswer);
+                  }}
+                >
+                  <AppText color="#489D89" font={font} size={size}>
+                    {showAnswer ? "Hide" : "Show"} Answer
+                  </AppText>
+                </TouchableOpacity>
+              </View>
+            )}
+            {showAnswer && (
+              <View style={styles.answer}>
+                <View style={styles.answerHeading}>
+                  <AppText bold font={font} size={size}>
+                    Answer
+                  </AppText>
+                </View>
+                <AppText font={font} size={size}>
+                  {currentQuestion.answer.map((item, index) => {
+                    if (isArray(item)) {
+                      return (
+                        <AppText font={font} key={index} size={size}>
+                          {item.map((item1, index1) => {
+                            if (item1.scriptures) {
+                              footnote += 1;
+                            }
+
+                            return (
+                              <AppText font={font} key={index1}>
+                                {item1.text}
+                                {item1.scriptures && (
+                                  <AppText
+                                    bold
+                                    color="#9e9e9e"
+                                    font={font}
+                                    size={size}
+                                    style={styles.scriptureSuperscript}
+                                  >
+                                    ({footnote}){" "}
+                                  </AppText>
+                                )}
+                              </AppText>
+                            );
+                          })}
+                        </AppText>
+                      );
+                    }
+
                     return (
                       <AppText font={font} key={index} size={size}>
-                        {item.map((item1, index1) => {
-                          if (item1.scriptures) {
-                            footnote += 1;
-                          }
-
-                          return (
-                            <AppText font={font} key={index1}>
-                              {item1.text}
-                              {item1.scriptures && (
-                                <AppText
-                                  bold
-                                  color="#9e9e9e"
-                                  font={font}
-                                  size={size}
-                                  style={styles.scriptureSuperscript}
-                                >
-                                  ({footnote}){" "}
-                                </AppText>
-                              )}
-                            </AppText>
-                          );
-                        })}
+                        {item.text}
+                        {item.scriptures && (
+                          <AppText
+                            bold
+                            color="#9e9e9e"
+                            font={font}
+                            size={size}
+                            style={styles.scriptureSuperscript}
+                          >
+                            ({index + 1}){" "}
+                          </AppText>
+                        )}
                       </AppText>
                     );
-                  }
+                  })}
+                </AppText>
+                <View style={styles.scriptures}>
+                  {currentQuestion.answer.map((item, index) => {
+                    if (isArray(item)) {
+                      return item.map((item1, index1) => {
+                        if (item1.scriptures) {
+                          footnote1 += 1;
+                        }
 
-                  return (
-                    <AppText font={font} key={index} size={size}>
-                      {item.text}
-                      {item.scriptures && (
-                        <AppText
-                          bold
-                          color="#9e9e9e"
-                          font={font}
-                          size={size}
-                          style={styles.scriptureSuperscript}
-                        >
-                          ({index + 1}){" "}
+                        return (
+                          <TouchableOpacity
+                            key={index1}
+                            onPress={() => {
+                              axios
+                                .post(
+                                  "https://mcc-admin.herokuapp.com/scriptures",
+                                  {
+                                    scripture: item1.scriptures,
+                                  }
+                                )
+                                .then((response) => {
+                                  setScriptures(response.data.results);
+                                })
+                                .catch(() => {
+                                  setScriptures([]);
+                                });
+                            }}
+                          >
+                            <AppText color="#489D89" font={font} size={size}>
+                              ({footnote1}) {item1.scriptures}
+                            </AppText>
+                          </TouchableOpacity>
+                        );
+                      });
+                    }
+
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          axios
+                            .post(
+                              "https://mcc-admin.herokuapp.com/scriptures",
+                              {
+                                scripture: item.scriptures,
+                              }
+                            )
+                            .then((response) => {
+                              setScriptures(response.data.results);
+                            })
+                            .catch(() => {
+                              setScriptures([]);
+                            });
+                        }}
+                      >
+                        <AppText color="#489D89" font={font} size={size}>
+                          ({index + 1}) {item.scriptures}
                         </AppText>
-                      )}
-                    </AppText>
-                  );
-                })}
-              </AppText>
-              <View style={styles.scriptures}>
-                {currentQuestion.answer.map((item, index) => {
-                  if (isArray(item)) {
-                    return item.map((item1, index1) => {
-                      if (item1.scriptures) {
-                        footnote1 += 1;
-                      }
-
-                      return (
-                        <TouchableOpacity
-                          key={index1}
-                          onPress={() => {
-                            axios
-                              .post(
-                                "https://mcc-admin.herokuapp.com/scriptures",
-                                {
-                                  scripture: item1.scriptures,
-                                }
-                              )
-                              .then((response) => {
-                                setScriptures(response.data.results);
-                              })
-                              .catch(() => {
-                                setScriptures([]);
-                              });
-                          }}
-                        >
-                          <AppText color="#489D89" font={font} size={size}>
-                            ({footnote1}) {item1.scriptures}
-                          </AppText>
-                        </TouchableOpacity>
-                      );
-                    });
-                  }
-
-                  return (
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
+            {isAnswered ? (
+              <View>
+                <View
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 10,
+                  }}
+                >
+                  <MaterialIcons
+                    name="check-circle"
+                    color="green"
+                    size={30}
+                    style={{
+                      marginRight: 6,
+                    }}
+                  />
+                  <AppText bold color="green" font={font} size={size + 10}>
+                    Nice!
+                  </AppText>
+                </View>
+                <View
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 10,
+                  }}
+                >
+                  {catechismIndex < selectedCatechism.content.length - 1 ? (
                     <TouchableOpacity
-                      key={index}
                       onPress={() => {
-                        axios
-                          .post("https://mcc-admin.herokuapp.com/scriptures", {
-                            scripture: item.scriptures,
-                          })
-                          .then((response) => {
-                            setScriptures(response.data.results);
-                          })
-                          .catch(() => {
-                            setScriptures([]);
-                          });
+                        setCatechismIndex(catechismIndex + 1);
+                        setIsAnswered(false);
+                        setShowAnswer(false);
+                        setAnswerValue("");
+                        _confettiView.stopConfetti();
+                      }}
+                      style={{
+                        alignItems: "center",
+                        backgroundColor: "#489D89",
+                        borderColor: "#489D89",
+                        borderRadius: 3,
+                        borderWidth: 1,
+                        display: "flex",
+                        flexDirection: "row",
+                        marginRight: 50,
+                        paddingLeft: 10,
+                        paddingRight: 2,
+                        paddingTop: 4,
+                        paddingBottom: 4,
                       }}
                     >
-                      <AppText color="#489D89" font={font} size={size}>
-                        ({index + 1}) {item.scriptures}
+                      <AppText color="#fff" bold font={font} size={size}>
+                        Next Question
                       </AppText>
+                      <Entypo
+                        color="#fff"
+                        name="chevron-right"
+                        size={24}
+                      ></Entypo>
                     </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          )}
-          {isAnswered ? (
-            <View>
-              <View
-                style={{
-                  alignItems: "center",
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: 10,
-                }}
-              >
-                <MaterialIcons
-                  name="check-circle"
-                  color="green"
-                  size={30}
-                  style={{
-                    marginRight: 6,
-                  }}
-                />
-                <AppText bold color="green" font={font} size={size + 10}>
-                  Nice!
-                </AppText>
-              </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: 10,
-                }}
-              >
-                {catechismIndex < selectedCatechism.content.length - 1 ? (
+                  ) : null}
                   <TouchableOpacity
                     onPress={() => {
-                      setCatechismIndex(catechismIndex + 1);
                       setIsAnswered(false);
                       setShowAnswer(false);
                       setAnswerValue("");
@@ -332,50 +381,19 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
                     }}
                     style={{
                       alignItems: "center",
-                      backgroundColor: "#489D89",
-                      borderColor: "#489D89",
-                      borderRadius: 3,
-                      borderWidth: 1,
                       display: "flex",
                       flexDirection: "row",
-                      marginRight: 50,
-                      paddingLeft: 10,
-                      paddingRight: 2,
-                      paddingTop: 4,
-                      paddingBottom: 4,
                     }}
                   >
-                    <AppText color="#fff" bold font={font} size={size}>
-                      Next Question
+                    <MaterialIcons color="#489D89" name="loop" size={20} />
+                    <AppText color="#489D89" font={font} size={size}>
+                      Reset
                     </AppText>
-                    <Entypo
-                      color="#fff"
-                      name="chevron-right"
-                      size={24}
-                    ></Entypo>
                   </TouchableOpacity>
-                ) : null}
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsAnswered(false);
-                    setShowAnswer(false);
-                    setAnswerValue("");
-                    _confettiView.stopConfetti();
-                  }}
-                  style={{
-                    alignItems: "center",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <MaterialIcons color="#489D89" name="loop" size={20} />
-                  <AppText color="#489D89" font={font} size={size}>
-                    Reset
-                  </AppText>
-                </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ) : null}
+            ) : null}
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -388,10 +406,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   contentContainer: {
-    flex: 1,
-  },
-  selectedCatechism: {
-    flex: 1,
     alignItems: "center",
   },
   change: {
@@ -407,8 +421,11 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     width: 150,
   },
+  selectedCatechism: {
+    paddingBottom: 20,
+    width: "100%",
+  },
   questionSection: {
-    flex: 1,
     justifyContent: "center",
     paddingLeft: 20,
     paddingRight: 20,

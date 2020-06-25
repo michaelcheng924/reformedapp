@@ -6,11 +6,12 @@ import TabBarIcon from "../components/TabBarIcon";
 import SettingsScreen from "../screens/SettingsScreen";
 import CatechismScreen from "../screens/CatechismScreen";
 import ConfessionsScreen from "../screens/ConfessionsScreen";
+import AboutScreen from "../screens/AboutScreen";
 import CATECHISMS from "../constants/catechisms";
 import CONFESSIONS from "../constants/confessions";
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = "Confessions";
+const INITIAL_ROUTE_NAME = "Catechisms";
 
 function BottomTabNavigator({ catechism, confession, navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
@@ -48,7 +49,17 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         options={{
           title: "Settings",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="settings" />
+            <TabBarIcon focused={focused} name="format-font" />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="About"
+        component={AboutScreen}
+        options={{
+          title: "About",
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="info" />
           ),
         }}
       />

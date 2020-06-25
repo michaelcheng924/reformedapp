@@ -2,12 +2,8 @@
   "expo": {
     "name": "catechisms1",
     "slug": "catechisms1",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -19,11 +15,17 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.learnreformed",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationAlwaysUsageDescription": "This app will not use this data. The data was only included because of the software used to build this app."
+      }
+    },
+    "android": {
+      "package": "com.learnreformed",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
