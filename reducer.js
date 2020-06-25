@@ -1,5 +1,6 @@
 const initialState = {
   catechism: "0",
+  confession: "0",
   font: "proxima-nova",
   size: 16,
 };
@@ -20,6 +21,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         catechism: payload.catechism,
+      };
+    case "SET_CONFESSION":
+      return {
+        ...state,
+        confession: payload.confession,
       };
     default:
       return state;

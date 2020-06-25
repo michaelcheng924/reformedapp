@@ -6,7 +6,7 @@ export default {
     Root: {
       path: "root",
       screens: {
-        Catechism: "Catechism",
+        Catechisms: "Catechisms",
         Settings: "Settings",
       },
     },

@@ -1,30 +1,44 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import TabBarIcon from "../components/TabBarIcon";
 import SettingsScreen from "../screens/SettingsScreen";
 import CatechismScreen from "../screens/CatechismScreen";
+import ConfessionsScreen from "../screens/ConfessionsScreen";
 import CATECHISMS from "../constants/catechisms";
+import CONFESSIONS from "../constants/confessions";
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = "Catechism";
+const INITIAL_ROUTE_NAME = "Confessions";
 
-function BottomTabNavigator({ catechism, navigation, route }) {
+function BottomTabNavigator({ catechism, confession, navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route, catechism) });
+  navigation.setOptions({
+    headerTitle: getHeaderTitle(route, catechism, confession),
+  });
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
-        name="Catechism"
+        name="Catechisms"
         component={CatechismScreen}
         options={{
-          title: "Catechism",
+          title: "Catechisms",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="bubbles" />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Confessions"
+        component={ConfessionsScreen}
+        options={{
+          title: "Confessions",
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="open-book" />
           ),
         }}
       />
@@ -42,15 +56,18 @@ function BottomTabNavigator({ catechism, navigation, route }) {
   );
 }
 
-function getHeaderTitle(route, catechism) {
+function getHeaderTitle(route, catechism, confession) {
   const routeName =
     route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
   const selectedCatechism = CATECHISMS[Number(catechism)];
+  const selectedConfession = CONFESSIONS[Number(confession)];
 
   switch (routeName) {
-    case "Catechism":
+    case "Catechisms":
       return selectedCatechism.title;
+    case "Confessions":
+      return selectedConfession.title;
     case "Settings":
       return "Settings";
   }
@@ -58,6 +75,7 @@ function getHeaderTitle(route, catechism) {
 
 const mapStateToProps = (state) => ({
   catechism: state.catechism,
+  confession: state.confession,
 });
 
 export default connect(mapStateToProps)(BottomTabNavigator);

@@ -1,10 +1,16 @@
-import { Feather, SimpleLineIcons } from "@expo/vector-icons";
+import { Feather, Entypo, SimpleLineIcons } from "@expo/vector-icons";
 import * as React from "react";
 
 import Colors from "../constants/Colors";
 
 export default function TabBarIcon(props) {
-  const Component = props.name === "settings" ? Feather : SimpleLineIcons;
+  let Component = SimpleLineIcons;
+
+  if (props.name === "settings") {
+    Component = Feather;
+  } else if (props.name === "open-book") {
+    Component = Entypo;
+  }
 
   return (
     <Component

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 import CATECHISMS from "../constants/catechisms";
@@ -9,22 +9,25 @@ const ChangeCatechism = ({
   catechism,
   font,
   setCatechism,
+  setCatechismIndex,
   setSelectCatechism,
   size,
 }) => {
   return (
-    <>
+    <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => {
           setSelectCatechism(false);
         }}
-        style={{
-          width: 40,
-        }}
       >
-        <View style={styles.backButton}>
-          <Entypo color="#fff" name="chevron-left" size={35} />
-        </View>
+        <Entypo
+          color="#489D89"
+          name="cross"
+          size={30}
+          style={{
+            textAlign: "right",
+          }}
+        />
       </TouchableOpacity>
       <View style={styles.selectCatechism}>
         <AppText font={font} bold size={20}>
@@ -36,6 +39,8 @@ const ChangeCatechism = ({
               key={index}
               onPress={() => {
                 setCatechism(String(index));
+                setCatechismIndex(0);
+                setSelectCatechism(false);
               }}
               style={[
                 styles.catechismCard,
@@ -68,9 +73,25 @@ const ChangeCatechism = ({
                     size={size - 3}
                   >
                     {item.slug === "boys-girls" ||
-                    item.slug === "westminster-shorter"
-                      ? "Easier"
-                      : "Harder"}
+                    item.slug === "westminster-shorter" ? (
+                      <AppText
+                        color={
+                          catechism === String(index) ? "#9A51B0" : "green"
+                        }
+                        font={font}
+                        size={size - 3}
+                      >
+                        Easier
+                      </AppText>
+                    ) : (
+                      <AppText
+                        color={catechism === String(index) ? "#9A51B0" : "red"}
+                        font={font}
+                        size={size - 3}
+                      >
+                        Harder
+                      </AppText>
+                    )}
                   </AppText>
                   {" | "}
                   <AppText
@@ -93,31 +114,13 @@ const ChangeCatechism = ({
             </TouchableOpacity>
           );
         })}
-        <View style={styles.selectMode}>
-          <AppText font={font} bold size={20}>
-            Select Mode
-          </AppText>
-        </View>
       </View>
-    </>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    backgroundColor: "#489D89",
-    borderRadius: 20,
-    display: "flex",
-    height: 40,
-    justifyContent: "center",
-    marginTop: 10,
-    marginLeft: 10,
-    paddingTop: 2,
-    width: 40,
-  },
   container: {
-    flex: 1,
     backgroundColor: "#fff",
   },
   contentContainer: {
@@ -130,13 +133,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  selectMode: {
-    marginTop: 20,
-  },
   catechismCard: {
     borderRadius: 3,
     borderWidth: 1,
-    marginTop: 10,
+    marginBottom: 20,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 10,

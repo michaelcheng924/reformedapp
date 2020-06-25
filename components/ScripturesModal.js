@@ -31,6 +31,12 @@ const ScripturesModal = ({ font, setScriptures, size, scriptures }) => {
             }}
           />
         </TouchableOpacity>
+        {scriptures && !scriptures.length ? (
+          <AppText font={font} size={size}>
+            There is no data to display. Maybe you're not connected to the
+            internet, or there is a problem with the Scripture reference.
+          </AppText>
+        ) : null}
         {scriptures &&
           scriptures.map((item, index) => {
             return (

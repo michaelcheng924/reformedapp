@@ -9,7 +9,13 @@ const Navigation = ({
 }) => {
   return (
     <View style={styles.navigation}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (catechismIndex > 0) {
+            setCatechismIndex(catechismIndex - 1);
+          }
+        }}
+      >
         <Entypo
           name="chevron-left"
           size={40}
@@ -27,7 +33,13 @@ const Navigation = ({
           flexGrow: 1,
         }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (catechismIndex < selectedCatechism.content.length - 1) {
+            setCatechismIndex(catechismIndex + 1);
+          }
+        }}
+      >
         <Entypo
           name="chevron-right"
           size={40}

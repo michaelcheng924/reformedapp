@@ -1,6 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 import AppText from "../components/AppText";
@@ -9,24 +15,27 @@ const FONTS = ["proxima-nova", "baskerville"];
 
 const SettingsScreen = ({ font, setFont, setSize, size }) => {
   return (
-    <View style={styles.settings}>
-      <View
-        style={[
-          styles.controlItem,
-          {
-            borderColor: "#4d5156",
-          },
-        ]}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.settings}
+    >
+      <TouchableOpacity
+        onPress={() => {
+          setFont("proxima-nova");
+          setSize(16);
+        }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            setFont("proxima-nova");
-            setSize(16);
-          }}
+        <View
+          style={[
+            styles.controlItem,
+            {
+              borderColor: "#4d5156",
+            },
+          ]}
         >
           <AppText font={font}>Reset</AppText>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       <View style={styles.controls}>
         <View
           style={[
@@ -38,20 +47,20 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
         >
           {FONTS.map((fontName, index) => {
             return (
-              <View
+              <TouchableOpacity
                 key={fontName}
-                style={[
-                  styles.controlItem,
-                  {
-                    borderColor: font === fontName ? "#9A51B0" : "#4d5156",
-                    marginLeft: index === 0 ? 0 : 10,
-                  },
-                ]}
+                onPress={() => {
+                  setFont(fontName);
+                }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    setFont(fontName);
-                  }}
+                <View
+                  style={[
+                    styles.controlItem,
+                    {
+                      borderColor: font === fontName ? "#9A51B0" : "#4d5156",
+                      marginLeft: index === 0 ? 0 : 10,
+                    },
+                  ]}
                 >
                   <AppText
                     color={font === fontName ? "#9A51B0" : ""}
@@ -59,8 +68,8 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
                   >
                     {fontName === "proxima-nova" ? "Sans-serif" : "Serif"}
                   </AppText>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -109,19 +118,25 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
           </AppText>
         </View>
         <AppText font={font} size={size}>
-          In the beginning was the Word, and the Word was with God, and the Word
-          was God.
+          1 In the beginning was the Word, and the Word was with God, and the
+          Word was God. 2 He was in the beginning with God. 3 All things were
+          made through him, and without him was not any thing made that was
+          made. 4 In him was life, and the life was the light of men. 5 The
+          light shines in the darkness, and the darkness has not overcome it.
         </AppText>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fff",
+    flex: 1,
+  },
   settings: {
     alignItems: "center",
     backgroundColor: "#fff",
-    flex: 1,
     paddingTop: 10,
     paddingBottom: 0,
     paddingLeft: 20,

@@ -8,7 +8,7 @@ const content = [
         scriptures: "I Cor. 10:31; Rom. 11:36",
       },
       {
-        text: "and to enjoy him for ever.",
+        text: "and to enjoy him forever.",
         scriptures: "Ps. 73:25-28",
       },
     ],

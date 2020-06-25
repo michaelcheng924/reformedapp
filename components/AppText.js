@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
-const AppText = ({ bold, children, color, font, size, style }) => {
+const AppText = ({ bold, children, color, font, size = 16, style }) => {
   return (
     <Text
       style={{
