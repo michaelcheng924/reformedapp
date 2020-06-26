@@ -258,6 +258,8 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
                       return item.map((item1, index1) => {
                         if (item1.scriptures) {
                           footnote1 += 1;
+                        } else {
+                          return null;
                         }
 
                         return (
