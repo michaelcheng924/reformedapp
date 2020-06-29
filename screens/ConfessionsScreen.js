@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Slider, StyleSheet, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { Entypo, MaterialIcons, Octicons } from "@expo/vector-icons";
@@ -14,15 +15,59 @@ import ScripturesModal from "../components/ScripturesModal";
 
 let scrollView;
 
-function ConfessionsScreen({ confession, font, setConfession, size }) {
+function ConfessionsScreen({
+  confession,
+  font,
+  setConfession,
+  setFont,
+  setSize,
+  size,
+}) {
   const [selectConfession, setSelectConfession] = useState(false);
   const [selectChapter, setSelectChapter] = useState(false);
   const [chapterIndex, setChapterIndex] = useState(0);
   const [scriptures, setScriptures] = useState(null);
 
   useEffect(() => {
+    try {
+      AsyncStorage.getItem("CONFESSION_INDEX").then((r) =>
+        setChapterIndex(Number(r) || 0)
+      );
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("CONFESSION").then((r) => {
+        if (r) {
+          setConfession(r);
+        }
+      });
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("FONT").then((r) => {
+        if (r && r !== font) {
+          setFont(r);
+        }
+      });
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("SIZE").then((r) => {
+        if (r && Number(r) !== size) {
+          setSize(Number(r));
+        }
+      });
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
     scrollView.scrollTo({ x: 0, y: 0 });
   }, [confession, chapterIndex]);
+
+  useEffect(() => {
+    AsyncStorage.setItem("CONFESSION_INDEX", String(chapterIndex));
+  }, [chapterIndex]);
+
+  useEffect(() => {
+    AsyncStorage.setItem("CONFESSION", confession);
+  }, [confession]);
 
   const selectedConfession = CONFESSIONS[Number(confession)];
   const selectedChapter = selectedConfession.content[chapterIndex];
@@ -177,7 +222,10 @@ function ConfessionsScreen({ confession, font, setConfession, size }) {
                             scripture: section.scriptures,
                           })
                           .then((response) => {
-                            setScriptures(response.data.results);
+                            setScriptures({
+                              text: section.text,
+                              scriptures: response.data.results,
+                            });
                           })
                           .catch(() => {
                             setScriptures([]);
@@ -353,6 +401,22 @@ const mapDispatchToProps = {
       type: "SET_CONFESSION",
       payload: {
         confession,
+      },
+    };
+  },
+  setFont(font) {
+    return {
+      type: "SET_FONT",
+      payload: {
+        font,
+      },
+    };
+  },
+  setSize(size) {
+    return {
+      type: "SET_SIZE",
+      payload: {
+        size,
       },
     };
   },

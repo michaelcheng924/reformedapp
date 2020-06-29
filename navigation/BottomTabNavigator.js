@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import TabBarIcon from "../components/TabBarIcon";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -21,6 +22,16 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
     headerTitle: getHeaderTitle(route, catechism, confession),
   });
 
+  useEffect(() => {
+    try {
+      AsyncStorage.getItem("PAGE").then((r) => {
+        if (r) {
+          navigation.navigate(r);
+        }
+      });
+    } catch (error) {}
+  }, []);
+
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
@@ -28,9 +39,9 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         component={CatechismScreen}
         options={{
           title: "Catechisms",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="bubbles" />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return <TabBarIcon focused={focused} name="bubbles" />;
+          },
         }}
       />
       <BottomTab.Screen
@@ -38,9 +49,9 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         component={ConfessionsScreen}
         options={{
           title: "Confessions",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="open-book" />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return <TabBarIcon focused={focused} name="open-book" />;
+          },
         }}
       />
       <BottomTab.Screen
@@ -48,9 +59,9 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         component={SettingsScreen}
         options={{
           title: "Settings",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="format-font" />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return <TabBarIcon focused={focused} name="format-font" />;
+          },
         }}
       />
       <BottomTab.Screen
@@ -58,9 +69,9 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         component={AboutScreen}
         options={{
           title: "About",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="info" />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return <TabBarIcon focused={focused} name="info" />;
+          },
         }}
       />
     </BottomTab.Navigator>

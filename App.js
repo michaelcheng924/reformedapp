@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import reducer from "./reducer";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
@@ -21,6 +22,9 @@ const Stack = createStackNavigator();
 
 export default function App(props) {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+
+  const routeNameRef = React.useRef();
+  const navigationRef = React.useRef();
 
   const loadFonts = () => {
     return Promise.all([
@@ -46,7 +50,25 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === "ios" && <StatusBar barStyle="dark-content" />}
         <Provider store={store}>
-          <NavigationContainer linking={LinkingConfiguration}>
+          <NavigationContainer
+            ref={navigationRef}
+            linking={LinkingConfiguration}
+            onStateChange={() => {
+              const previousRouteName = routeNameRef.current;
+              const currentRouteName = navigationRef.current.getCurrentRoute()
+                .name;
+
+              if (previousRouteName !== currentRouteName) {
+                // The line below uses the expo-firebase-analytics tracker
+                // https://docs.expo.io/versions/latest/sdk/firebase-analytics/
+                // Change this line to use another Mobile analytics SDK
+                AsyncStorage.setItem("PAGE", currentRouteName);
+              }
+
+              // Save the current route name for later comparision
+              routeNameRef.current = currentRouteName;
+            }}
+          >
             <Stack.Navigator>
               <Stack.Screen name="Root" component={BottomTabNavigator} />
             </Stack.Navigator>

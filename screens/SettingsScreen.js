@@ -1,12 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { Entypo } from "@expo/vector-icons";
 
 import AppText from "../components/AppText";
@@ -14,6 +9,31 @@ import AppText from "../components/AppText";
 const FONTS = ["proxima-nova", "baskerville"];
 
 const SettingsScreen = ({ font, setFont, setSize, size }) => {
+  useEffect(() => {
+    try {
+      AsyncStorage.getItem("FONT").then((r) => {
+        if (r && r !== font) {
+          setFont(r);
+        }
+      });
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("SIZE").then((r) => {
+        if (r && Number(r) !== size) {
+          setSize(Number(r));
+        }
+      });
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem("FONT", font);
+  }, [font]);
+
+  useEffect(() => {
+    AsyncStorage.setItem("SIZE", String(size));
+  }, [size]);
+
   return (
     <ScrollView
       style={styles.container}

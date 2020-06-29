@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import each from "lodash/each";
 import isArray from "lodash/isArray";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import Confetti from "react-native-confetti";
@@ -23,7 +24,14 @@ function getStrippedText(text) {
   return text.replace(/[^a-zA-Z ]/g, "");
 }
 
-function CatechismScreen({ catechism, font, setCatechism, size }) {
+function CatechismScreen({
+  catechism,
+  font,
+  setCatechism,
+  setFont,
+  setSize,
+  size,
+}) {
   const [selectCatechism, setSelectCatechism] = useState(false);
   const [catechismIndex, setCatechismIndex] = useState(0);
   const [answerValue, setAnswerValue] = useState("");
@@ -32,7 +40,37 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
   const [scriptures, setScriptures] = useState(null);
 
   useEffect(() => {
+    try {
+      AsyncStorage.getItem("CATECHISM_INDEX").then((r) =>
+        setCatechismIndex(Number(r) || 0)
+      );
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("CATECHISM").then((r) => {
+        if (r) {
+          setCatechism(r);
+        }
+      });
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("FONT").then((r) => {
+        if (r && r !== font) {
+          setFont(r);
+        }
+      });
+    } catch (error) {}
+    try {
+      AsyncStorage.getItem("SIZE").then((r) => {
+        if (r && Number(r) !== size) {
+          setSize(Number(r));
+        }
+      });
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
     setAnswerValue("");
+    AsyncStorage.setItem("CATECHISM_INDEX", String(catechismIndex));
   }, [catechismIndex]);
 
   useEffect(() => {
@@ -40,6 +78,8 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
     setIsAnswered(false);
     setShowAnswer(false);
     setAnswerValue("");
+
+    AsyncStorage.setItem("CATECHISM", catechism);
   }, [catechism]);
 
   const selectedCatechism = CATECHISMS[Number(catechism)];
@@ -184,16 +224,23 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
               </View>
             ) : null}
             {isAnswered ? null : (
-              <View style={styles.toggleAnswer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowAnswer(!showAnswer);
-                  }}
-                >
-                  <AppText color="#489D89" font={font} size={size}>
-                    {showAnswer ? "Hide" : "Show"} Answer
-                  </AppText>
-                </TouchableOpacity>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <View style={styles.toggleAnswer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowAnswer(!showAnswer);
+                    }}
+                  >
+                    <AppText color="#489D89" font={font} size={size}>
+                      {showAnswer ? "Hide" : "Show"} Answer
+                    </AppText>
+                  </TouchableOpacity>
+                </View>
               </View>
             )}
             {showAnswer && (
@@ -274,7 +321,10 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
                                   }
                                 )
                                 .then((response) => {
-                                  setScriptures(response.data.results);
+                                  setScriptures({
+                                    text: item1.text,
+                                    scriptures: response.data.results,
+                                  });
                                 })
                                 .catch(() => {
                                   setScriptures([]);
@@ -301,7 +351,10 @@ function CatechismScreen({ catechism, font, setCatechism, size }) {
                               }
                             )
                             .then((response) => {
-                              setScriptures(response.data.results);
+                              setScriptures({
+                                text: item.text,
+                                scriptures: response.data.results,
+                              });
                             })
                             .catch(() => {
                               setScriptures([]);
@@ -453,7 +506,6 @@ const styles = StyleSheet.create({
   },
   toggleAnswer: {
     marginTop: 10,
-    width: 105,
   },
   answer: {
     borderWidth: 1,
@@ -492,6 +544,22 @@ const mapDispatchToProps = {
       type: "SET_CATECHISM",
       payload: {
         catechism,
+      },
+    };
+  },
+  setFont(font) {
+    return {
+      type: "SET_FONT",
+      payload: {
+        font,
+      },
+    };
+  },
+  setSize(size) {
+    return {
+      type: "SET_SIZE",
+      payload: {
+        size,
       },
     };
   },

@@ -47,6 +47,40 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
           </TouchableOpacity>
         </View>
       </View>
+      <View
+        style={{
+          marginTop: 25,
+        }}
+      >
+        <AppText font={font} size={size}>
+          To let me know about a bug, feature request, or any other suggestion,
+          visit the link below.
+        </AppText>
+      </View>
+      <View
+        style={{
+          marginTop: 25,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL("https://reformedwiki.com/support/");
+            }}
+          >
+            <View style={styles.button}>
+              <AppText color="#489D89" font={font} size={size}>
+                ReformedWiki - Support
+              </AppText>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ScrollView>
   );
 };
