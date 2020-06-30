@@ -195,8 +195,58 @@ function CatechismScreen({
           <View style={styles.questionSection}>
             <View style={styles.questionText}>
               <AppText font={font} size={size + 10}>
-                {catechismIndex + 1}. {currentQuestion.question}
+                {catechismIndex + 1}.{" "}
+                {isArray(currentQuestion.question)
+                  ? currentQuestion.question.map((item, index) => {
+                      return (
+                        <AppText font={font} key={index}>
+                          <AppText font={font} size={size + 10}>
+                            {item.text}
+                          </AppText>
+                          <AppText
+                            bold
+                            color="#9e9e9e"
+                            font={font}
+                            size={size + 10}
+                          >
+                            ({index + 1})
+                          </AppText>
+                        </AppText>
+                      );
+                    })
+                  : currentQuestion.question}
               </AppText>
+              {isArray(currentQuestion.question)
+                ? currentQuestion.question.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          axios
+                            .post(
+                              "https://mcc-admin.herokuapp.com/scriptures",
+                              {
+                                scripture: item.scriptures,
+                              }
+                            )
+                            .then((response) => {
+                              setScriptures({
+                                text: item.text,
+                                scriptures: response.data.results,
+                              });
+                            })
+                            .catch(() => {
+                              setScriptures([]);
+                            });
+                        }}
+                      >
+                        <AppText color="#489D89" font={font} size={size}>
+                          ({index + 1}) {item.scriptures}
+                        </AppText>
+                      </TouchableOpacity>
+                    );
+                  })
+                : null}
             </View>
             {isAnswered ? null : (
               <AppTextInput
@@ -261,7 +311,7 @@ function CatechismScreen({
                             }
 
                             return (
-                              <AppText font={font} key={index1}>
+                              <AppText font={font} size={size} key={index1}>
                                 {item1.text}
                                 {item1.scriptures && (
                                   <AppText
