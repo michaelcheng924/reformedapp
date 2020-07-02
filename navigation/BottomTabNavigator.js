@@ -10,6 +10,7 @@ import ConfessionsScreen from "../screens/ConfessionsScreen";
 import AboutScreen from "../screens/AboutScreen";
 import CATECHISMS from "../constants/catechisms";
 import CONFESSIONS from "../constants/confessions";
+import CREEDS from "../constants/creeds";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Catechisms";
@@ -48,7 +49,7 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
         name="Confessions"
         component={ConfessionsScreen}
         options={{
-          title: "Confessions",
+          title: "Read",
           tabBarIcon: ({ focused }) => {
             return <TabBarIcon focused={focused} name="open-book" />;
           },
@@ -83,7 +84,13 @@ function getHeaderTitle(route, catechism, confession) {
     route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
   const selectedCatechism = CATECHISMS[Number(catechism)];
-  const selectedConfession = CONFESSIONS[Number(confession)];
+  let selectedConfession = CONFESSIONS[Number(confession)];
+
+  if (confession.indexOf("CATECHISM") !== -1) {
+    selectedConfession = CATECHISMS[Number(confession.split("_")[1])];
+  } else if (confession.indexOf("CREED") !== -1) {
+    selectedConfession = CREEDS[Number(confession.split("_")[1])];
+  }
 
   switch (routeName) {
     case "Catechisms":

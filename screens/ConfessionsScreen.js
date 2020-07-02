@@ -6,12 +6,17 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { Entypo, MaterialIcons, Octicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import some from "lodash/some";
 
 import CONFESSIONS from "../constants/confessions";
+import CATECHISMS from "../constants/catechisms";
+import CREEDS from "../constants/creeds";
 import AppText from "../components/AppText";
 import ChangeConfession from "../components/ChangeConfession";
 import ChangeChapter from "../components/ChangeChapter";
 import ScripturesModal from "../components/ScripturesModal";
+import ReadCatechism from "../components/ReadCatechism";
+import ReadCreed from "../components/ReadCreed";
 
 let scrollView;
 
@@ -58,7 +63,9 @@ function ConfessionsScreen({
   }, []);
 
   useEffect(() => {
-    scrollView.scrollTo({ x: 0, y: 0 });
+    if (scrollView) {
+      scrollView.scrollTo({ x: 0, y: 0 });
+    }
   }, [confession, chapterIndex]);
 
   useEffect(() => {
@@ -68,6 +75,36 @@ function ConfessionsScreen({
   useEffect(() => {
     AsyncStorage.setItem("CONFESSION", confession);
   }, [confession]);
+
+  if (confession.indexOf("CATECHISM") !== -1) {
+    const catechism = Number(confession.split("_")[1]);
+    const selectedCatechism = CATECHISMS[catechism];
+
+    return (
+      <ReadCatechism
+        confession={confession}
+        setConfession={setConfession}
+        selectConfession={selectConfession}
+        setSelectConfession={setSelectConfession}
+        selectedCatechism={selectedCatechism}
+      />
+    );
+  }
+
+  if (confession.indexOf("CREED") !== -1) {
+    const creed = Number(confession.split("_")[1]);
+    const selectedCreed = CREEDS[creed];
+
+    return (
+      <ReadCreed
+        confession={confession}
+        setConfession={setConfession}
+        selectConfession={selectConfession}
+        setSelectConfession={setSelectConfession}
+        selectedCreed={selectedCreed}
+      />
+    );
+  }
 
   const selectedConfession = CONFESSIONS[Number(confession)];
   const selectedChapter = selectedConfession.content[chapterIndex];
@@ -173,10 +210,17 @@ function ConfessionsScreen({
                 marginBottom: 25,
               }}
             >
-              <AppText font={font} size={size}>
-                <AppText bold font={font} size={size}>
-                  {index + 1}.{" "}
+              {paragraph[0].title ? (
+                <AppText font={font} size={size + 3} bold>
+                  {paragraph[0].title}
                 </AppText>
+              ) : null}
+              <AppText font={font} size={size}>
+                {selectedConfession.title !== "Canons of Dort" ? (
+                  <AppText bold font={font} size={size}>
+                    {index + 1}.{" "}
+                  </AppText>
+                ) : null}
                 {paragraph.map((section, index1) => {
                   if (section.scriptures) {
                     footnote += 1;
@@ -195,55 +239,62 @@ function ConfessionsScreen({
                 })}
               </AppText>
 
-              <View
-                style={{
-                  borderColor: "#4d5156",
-                  borderWidth: 1,
-                  marginTop: 10,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                }}
-              >
-                {paragraph.map((section, index1) => {
-                  if (section.scriptures) {
-                    footnote1 += 1;
-                  } else {
-                    return null;
-                  }
+              {some(paragraph, (item) => {
+                return item.scriptures;
+              }) ? (
+                <View
+                  style={{
+                    borderColor: "#4d5156",
+                    borderWidth: 1,
+                    marginTop: 10,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                  }}
+                >
+                  {paragraph.map((section, index1) => {
+                    if (section.scriptures) {
+                      footnote1 += 1;
+                    } else {
+                      return null;
+                    }
 
-                  return (
-                    <TouchableOpacity
-                      key={index1}
-                      onPress={() => {
-                        axios
-                          .post("https://mcc-admin.herokuapp.com/scriptures", {
-                            scripture: section.scriptures,
-                          })
-                          .then((response) => {
-                            setScriptures({
-                              text: section.text,
-                              scriptures: response.data.results,
+                    return (
+                      <TouchableOpacity
+                        key={index1}
+                        onPress={() => {
+                          axios
+                            .post(
+                              "https://mcc-admin.herokuapp.com/scriptures",
+                              {
+                                scripture: section.scriptures,
+                              }
+                            )
+                            .then((response) => {
+                              setScriptures({
+                                text: section.text,
+                                scriptures: response.data.results,
+                              });
+                            })
+                            .catch(() => {
+                              setScriptures([]);
                             });
-                          })
-                          .catch(() => {
-                            setScriptures([]);
-                          });
-                      }}
-                    >
-                      <AppText font={font}>
-                        <AppText bold color="#489D89" font={font} size={size}>
-                          ({footnote1})
-                        </AppText>{" "}
-                        <AppText color="#489D89" font={font} size={size}>
-                          {section.scriptures}
+                        }}
+                      >
+                        <AppText font={font}>
+                          <AppText bold color="#489D89" font={font} size={size}>
+                            ({footnote1})
+                          </AppText>{" "}
+                          <AppText color="#489D89" font={font} size={size}>
+                            {section.scriptures}
+                          </AppText>
                         </AppText>
-                      </AppText>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : null}
             </View>
           );
         })}
@@ -320,7 +371,7 @@ function ConfessionsScreen({
                 }}
               />
               <AppText color="#489D89" font={font} size={14}>
-                Change Confession
+                Change Document
               </AppText>
             </View>
           </TouchableOpacity>
