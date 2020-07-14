@@ -1666,6 +1666,8 @@ const baptistCatechismData = {
   type: "catechism",
   slug: "baptist-catechism",
   title: "Baptist Catechism",
+  description:
+    "The Baptist Catechism is more extensive than the Catechism for Boys and Girls. It was designed to be a companion to the 1689 London Baptist Confession of Faith. It contains 114 questions and answers.",
   date: "1695",
   dateNum: 1695,
   content,

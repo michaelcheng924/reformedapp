@@ -3161,6 +3161,8 @@ const heidelbergCatechismData = {
   type: "catechism",
   slug: "heidelberg-catechism",
   title: "Heidelberg Catechism",
+  description:
+    "The Heidelberg Catechism is known for being warm and personal in tone. It contains 129 questions and answers.",
   date: "1563",
   dateNum: 1563,
   content,

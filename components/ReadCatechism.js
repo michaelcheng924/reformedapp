@@ -86,36 +86,53 @@ const ReadCatechism = ({
   }
 
   function renderAnswer(item, index) {
+    if (isArray(item.answer[0])) {
+      return (
+        <View key={index}>
+          {item.answer.map((item1, index1) => {
+            return (
+              <View
+                key={index1}
+                style={{
+                  marginBottom: 25,
+                }}
+              >
+                <AppText font={font} size={size}>
+                  {item1.map((item2, index2) => {
+                    if (item2.scriptures) {
+                      footnote += 1;
+                    }
+
+                    return (
+                      <AppText key={index2} font={font} size={size}>
+                        {item2.text}
+                        {item2.scriptures && (
+                          <AppText
+                            bold
+                            color="#9e9e9e"
+                            font={font}
+                            size={size}
+                            style={styles.scriptureSuperscript}
+                          >
+                            ({footnote}){" "}
+                          </AppText>
+                        )}
+                      </AppText>
+                    );
+                  })}
+                </AppText>
+              </View>
+            );
+          })}
+        </View>
+      );
+    }
+
     return (
       <AppText font={font} size={size}>
         {item.answer.map((item, index) => {
-          if (isArray(item)) {
-            return (
-              <AppText font={font} key={index} size={size}>
-                {item.map((item1, index1) => {
-                  if (item1.scriptures) {
-                    footnote += 1;
-                  }
-
-                  return (
-                    <AppText font={font} size={size} key={index1}>
-                      {item1.text}
-                      {item1.scriptures && (
-                        <AppText
-                          bold
-                          color="#9e9e9e"
-                          font={font}
-                          size={size}
-                          style={styles.scriptureSuperscript}
-                        >
-                          ({footnote}){" "}
-                        </AppText>
-                      )}
-                    </AppText>
-                  );
-                })}
-              </AppText>
-            );
+          if (item.scriptures) {
+            footnote += 1;
           }
 
           return (
@@ -129,7 +146,7 @@ const ReadCatechism = ({
                   size={size}
                   style={styles.scriptureSuperscript}
                 >
-                  ({index + 1}){" "}
+                  ({footnote}){" "}
                 </AppText>
               )}
             </AppText>
@@ -254,6 +271,12 @@ const ReadCatechism = ({
                       });
                     }
 
+                    if (item.scriptures) {
+                      footnote1 += 1;
+                    } else {
+                      return null;
+                    }
+
                     return (
                       <TouchableOpacity
                         key={index}
@@ -277,7 +300,7 @@ const ReadCatechism = ({
                         }}
                       >
                         <AppText color="#489D89" font={font} size={size}>
-                          ({index + 1}) {item.scriptures}
+                          ({footnote1}) {item.scriptures}
                         </AppText>
                       </TouchableOpacity>
                     );

@@ -1664,6 +1664,8 @@ const boysGirlsData = {
   type: "catechism",
   slug: "boys-girls",
   title: "Catechism for Boys and Girls",
+  description:
+    "The Catechism for Boys and Girls is a very accessible catechism that works very well with younger children. It contains 145 questions and answers, most of which are short and easy to memorize.",
   date: "1969",
   dateNum: 1969,
   content,

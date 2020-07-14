@@ -300,55 +300,66 @@ function CatechismScreen({
                     Answer
                   </AppText>
                 </View>
-                <AppText font={font} size={size}>
-                  {currentQuestion.answer.map((item, index) => {
-                    if (isArray(item)) {
+                {isArray(currentQuestion.answer[0]) ? (
+                  <View>
+                    {currentQuestion.answer.map((item, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            marginBottom: 25,
+                          }}
+                        >
+                          <AppText font={font} size={size}>
+                            {item.map((item1, index1) => {
+                              if (item1.scriptures) {
+                                footnote += 1;
+                              }
+
+                              return (
+                                <AppText font={font} size={size} key={index1}>
+                                  {item1.text}
+                                  {item1.scriptures && (
+                                    <AppText
+                                      bold
+                                      color="#9e9e9e"
+                                      font={font}
+                                      size={size}
+                                      style={styles.scriptureSuperscript}
+                                    >
+                                      ({footnote}){" "}
+                                    </AppText>
+                                  )}
+                                </AppText>
+                              );
+                            })}
+                          </AppText>
+                        </View>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <AppText font={font} size={size}>
+                    {currentQuestion.answer.map((item, index) => {
                       return (
                         <AppText font={font} key={index} size={size}>
-                          {item.map((item1, index1) => {
-                            if (item1.scriptures) {
-                              footnote += 1;
-                            }
-
-                            return (
-                              <AppText font={font} size={size} key={index1}>
-                                {item1.text}
-                                {item1.scriptures && (
-                                  <AppText
-                                    bold
-                                    color="#9e9e9e"
-                                    font={font}
-                                    size={size}
-                                    style={styles.scriptureSuperscript}
-                                  >
-                                    ({footnote}){" "}
-                                  </AppText>
-                                )}
-                              </AppText>
-                            );
-                          })}
+                          {item.text}
+                          {item.scriptures && (
+                            <AppText
+                              bold
+                              color="#9e9e9e"
+                              font={font}
+                              size={size}
+                              style={styles.scriptureSuperscript}
+                            >
+                              ({index + 1}){" "}
+                            </AppText>
+                          )}
                         </AppText>
                       );
-                    }
-
-                    return (
-                      <AppText font={font} key={index} size={size}>
-                        {item.text}
-                        {item.scriptures && (
-                          <AppText
-                            bold
-                            color="#9e9e9e"
-                            font={font}
-                            size={size}
-                            style={styles.scriptureSuperscript}
-                          >
-                            ({index + 1}){" "}
-                          </AppText>
-                        )}
-                      </AppText>
-                    );
-                  })}
-                </AppText>
+                    })}
+                  </AppText>
+                )}
                 <View style={styles.scriptures}>
                   {currentQuestion.answer.map((item, index) => {
                     if (isArray(item)) {
@@ -387,6 +398,12 @@ function CatechismScreen({
                           </TouchableOpacity>
                         );
                       });
+                    }
+
+                    if (item.scriptures) {
+                      footnote1 += 1;
+                    } else {
+                      return null;
                     }
 
                     return (

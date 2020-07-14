@@ -1705,6 +1705,8 @@ const westminsterShorterData = {
   type: "catechism",
   slug: "westminster-shorter",
   title: "Westminster Shorter Catechism",
+  description:
+    "The Westminster Shorter Catechism is a shorter and more accessible catechism than the Westminster Larger Catechism. It was designed to be a companion to the Westminster Confession of Faith. It contains 107 questions and answers.",
   date: "1647",
   dateNum: 1647,
   content,

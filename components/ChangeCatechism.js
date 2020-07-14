@@ -93,22 +93,9 @@ const ChangeCatechism = ({
                       </AppText>
                     )}
                   </AppText>
-                  {" | "}
-                  <AppText
-                    bold
-                    color={catechism === String(index) ? "#9A51B0" : "#4d5156"}
-                    font={font}
-                    size={size - 3}
-                  >
-                    {item.content.length}
-                  </AppText>{" "}
-                  <AppText
-                    color={catechism === String(index) ? "#9A51B0" : "#4d5156"}
-                    font={font}
-                    size={size - 3}
-                  >
-                    questions
-                  </AppText>
+                </AppText>
+                <AppText font={font} size={size - 3} color="#757575">
+                  {item.description}
                 </AppText>
               </View>
             </TouchableOpacity>

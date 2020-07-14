@@ -100,6 +100,9 @@ const ChangeConfession = ({
                 >
                   {item.title}
                 </AppText>
+                <AppText font={font} size={size - 3} color="#757575">
+                  {item.description}
+                </AppText>
               </View>
             </TouchableOpacity>
           );
