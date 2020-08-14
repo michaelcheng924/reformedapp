@@ -264,12 +264,7 @@ All of which are given by the inspiration of God, to be the rule of faith ad lif
           superscript: 4,
           text:
             "invisible, without body, parts, or passions, who only hath immortality, dwelling in the light which no man can approach unto;",
-          scriptures: "John 4:24",
-        },
-        {
-          superscript: 5,
-          text: "who is immutable,",
-          scriptures: "1 Timothy 1:17; Deuteronomy 4:15-16",
+          scriptures: "John 4:24; 1 Timothy 1:17; Deuteronomy 4:15-16",
         },
         {
           superscript: 6,

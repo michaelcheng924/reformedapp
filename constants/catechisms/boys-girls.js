@@ -1637,11 +1637,11 @@ const content = [
 
   {
     number: 144,
-    question: "What will happen to the righteous Jn the day of judgement?",
+    question: "What will happen to the righteous in the day of judgement?",
     answer: [
       {
         text:
-          "They shall live with Christ for ever, Jn a new heaven and a new earth.",
+          "They shall live with Christ for ever, in a new heaven and a new earth.",
         scriptures: "Is 66:22; 1 Thes 4;16, 17; 2 Pet 3:10-13; Rv 21:1-4",
       },
     ],
