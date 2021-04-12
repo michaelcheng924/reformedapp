@@ -206,7 +206,7 @@ const content = [
       ],
       [
         {
-          text: `It is therefore evident that the Father is not the Son, nor the Son the Father, and likewise the Holy SpHoly Spirit, but the Son only. The Father has never been without His Son,`,
+          text: `It is therefore evident that the Father is not the Son, nor the Son the Father, and likewise the Holy Spirit is neither the Father nor the Son. Nevertheless, these persons thus distinguished are not divided, nor intermixed; for the Father has not assumed our flesh and blood, neither has the Holy Spirit, but the Son only. The Father has never been without his Son,`,
           scriptures: "Mic 5:2; John 1:1-2",
         },
         {

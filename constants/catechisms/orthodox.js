@@ -143,7 +143,7 @@ const content = [
 
   {
     number: 8,
-    question: `But are we so corrupt that we are totally unable to do any good`,
+    question: `But are we so corrupt that we are totally unable to do any good and inclined toward all evil?`,
     answer: [
       {
         text: `Yes,`,
@@ -159,7 +159,7 @@ const content = [
   {
     section: `Lesson 4`,
     number: 9,
-    question: `But doesn't God do us an injustice by requiring in his law what`,
+    question: `But doesn't God do us an injustice by requiring in his law what we are unable to do?`,
     answer: [
       {
         text: `No, God created humans with the ability to keep the law.`,
@@ -179,7 +179,7 @@ const content = [
 
   {
     number: 10,
-    question: `Will God permit such disobedience and rebellion to go`,
+    question: `Will God permit such disobedience and rebellion to go unpunished?`,
     answer: [
       {
         text: `Certainly not. He is terribly angry about the sin we are born with as well as the sins we personally commit. As a just judge he punishes them now and in eternity.`,

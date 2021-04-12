@@ -702,7 +702,7 @@ All which are given by inspiration of God, to be the rule of faith and life.`,
     content: [
       [
         {
-          text: `The distance between God and the creature is go great, that although reasonable creatures do owe obedience unto Him as their Creator, yet they could never have any fruition of Him as their blessedness and reward, but by some voluntary condescension on God’s part, which He hath been pleased to express by way of covenant.`,
+          text: `The distance between God and the creature is so great, that although reasonable creatures do owe obedience unto Him as their Creator, yet they could never have any fruition of Him as their blessedness and reward, but by some voluntary condescension on God’s part, which He hath been pleased to express by way of covenant.`,
           scriptures:
             "Isa. 40:13, 14, 15, 16, 17; Job. 9:32, 33; I Sam. 2:25; Ps. 113:5, 6; Ps. 100:2, 3; Job. 22:2, 3; Job 35:7, 8; Luke 17:10; Acts 17:24, 25",
         },
