@@ -25,7 +25,7 @@
     },
     "android": {
       "package": "com.catechismsandmore",
-      "versionCode": 9
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
