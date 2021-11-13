@@ -174,6 +174,7 @@ const ReadCatechism = ({
           }}
         >
           <ChangeConfession
+            theme={theme}
             confession={confession}
             font={font}
             setConfession={setConfession}

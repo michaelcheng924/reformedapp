@@ -7,7 +7,7 @@ import { Entypo } from "@expo/vector-icons";
 
 import AppText from "../components/AppText";
 
-const ScripturesModal = ({ font, setScriptures, size, scriptures }) => {
+const ScripturesModal = ({ theme, font, setScriptures, size, scriptures }) => {
   return (
     <Modal
       isVisible={!!scriptures}
@@ -16,7 +16,10 @@ const ScripturesModal = ({ font, setScriptures, size, scriptures }) => {
       }}
     >
       <ScrollView
-        style={styles.scripturesModal}
+        style={{
+          ...styles.scripturesModal,
+          backgroundColor: theme === "Dark" ? "#000" : "#fff",
+        }}
         contentContainerStyle={styles.contentContainer}
       >
         <TouchableOpacity
@@ -108,7 +111,6 @@ const ScripturesModal = ({ font, setScriptures, size, scriptures }) => {
 
 const styles = StyleSheet.create({
   scripturesModal: {
-    backgroundColor: "#fff",
     flex: 1,
     maxHeight: "80%",
     paddingTop: 10,

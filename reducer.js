@@ -2,11 +2,17 @@ const initialState = {
   catechism: "0",
   confession: "0",
   font: "proxima-nova",
+  theme: "Light",
   size: 16,
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case "SET_THEME":
+      return {
+        ...state,
+        theme: payload.theme,
+      };
     case "SET_FONT":
       return {
         ...state,

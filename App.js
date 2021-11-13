@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import reducer from "./reducer";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import LinkingConfiguration from "./navigation/LinkingConfiguration";
+import StackNavigator from "./components/StackNavigator";
 
 const store = createStore(
   reducer,
@@ -47,7 +48,7 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <View style={styles.container}>
+      <View style={{ ...styles.container }}>
         {Platform.OS === "ios" && <StatusBar barStyle="dark-content" />}
         <Provider store={store}>
           <NavigationContainer
@@ -55,8 +56,8 @@ export default function App(props) {
             linking={LinkingConfiguration}
             onStateChange={() => {
               const previousRouteName = routeNameRef.current;
-              const currentRouteName = navigationRef.current.getCurrentRoute()
-                .name;
+              const currentRouteName =
+                navigationRef.current.getCurrentRoute().name;
 
               if (previousRouteName !== currentRouteName) {
                 // The line below uses the expo-firebase-analytics tracker
@@ -69,9 +70,7 @@ export default function App(props) {
               routeNameRef.current = currentRouteName;
             }}
           >
-            <Stack.Navigator>
-              <Stack.Screen name="Root" component={BottomTabNavigator} />
-            </Stack.Navigator>
+            <StackNavigator />
           </NavigationContainer>
         </Provider>
       </View>
@@ -82,6 +81,5 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
 });

@@ -6,9 +6,10 @@ import { Entypo } from "@expo/vector-icons";
 
 import AppText from "../components/AppText";
 
+const THEMES = ["Light", "Dark"];
 const FONTS = ["proxima-nova", "baskerville"];
 
-const SettingsScreen = ({ font, setFont, setSize, size }) => {
+const SettingsScreen = ({ theme, font, setTheme, setFont, setSize, size }) => {
   useEffect(() => {
     try {
       AsyncStorage.getItem("FONT").then((r) => {
@@ -36,11 +37,18 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
 
   return (
     <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.settings}
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
+      contentContainerStyle={{
+        ...styles.settings,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
     >
       <TouchableOpacity
         onPress={() => {
+          setTheme("light");
           setFont("proxima-nova");
           setSize(16);
         }}
@@ -57,78 +65,113 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
         </View>
       </TouchableOpacity>
       <View style={styles.controls}>
-        <View
-          style={[
-            styles.controlItems,
-            {
-              marginRight: 40,
-            },
-          ]}
-        >
-          {FONTS.map((fontName, index) => {
-            return (
-              <TouchableOpacity
-                key={fontName}
-                onPress={() => {
-                  setFont(fontName);
-                }}
-              >
-                <View
-                  style={[
-                    styles.controlItem,
-                    {
-                      borderColor: font === fontName ? "#9A51B0" : "#4d5156",
-                      marginLeft: index === 0 ? 0 : 10,
-                    },
-                  ]}
+        <View style={styles.controlsInner}>
+          <View style={[styles.controlItems]}>
+            {THEMES.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item}
+                  onPress={() => {
+                    setTheme(item);
+                  }}
                 >
-                  <AppText
-                    color={font === fontName ? "#9A51B0" : ""}
-                    font={font}
+                  <View
+                    style={[
+                      styles.controlItem,
+                      {
+                        backgroundColor: item === "Dark" ? "#000" : "#fff",
+                        borderColor: theme === item ? "#039be5" : "#4d5156",
+                        marginLeft: index === 0 ? 0 : 10,
+                      },
+                    ]}
                   >
-                    {fontName === "proxima-nova" ? "Sans-serif" : "Serif"}
-                  </AppText>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                    <AppText
+                      color={item === "Dark" ? "#fff" : "#4d5156"}
+                      font={font}
+                      forceColor
+                    >
+                      {item}
+                    </AppText>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-        <View style={styles.fontSizeControls}>
-          <TouchableOpacity
-            onPress={() => {
-              if (size <= 70) {
-                setSize(size + 1);
-              }
-            }}
+        <View style={styles.controlsInner}>
+          <View
+            style={[
+              styles.controlItems,
+              {
+                marginRight: 40,
+              },
+            ]}
           >
-            <Entypo
-              name="chevron-up"
-              size={40}
-              color="#4d5156"
-              style={{
-                position: "relative",
-                top: 8,
+            {FONTS.map((fontName, index) => {
+              return (
+                <TouchableOpacity
+                  key={fontName}
+                  onPress={() => {
+                    setFont(fontName);
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.controlItem,
+                      {
+                        borderColor: font === fontName ? "#039be5" : "#4d5156",
+                        marginLeft: index === 0 ? 0 : 10,
+                      },
+                    ]}
+                  >
+                    <AppText
+                      color={font === fontName ? "#039be5" : ""}
+                      font={font}
+                    >
+                      {fontName === "proxima-nova" ? "Sans-serif" : "Serif"}
+                    </AppText>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <View style={styles.fontSizeControls}>
+            <TouchableOpacity
+              onPress={() => {
+                if (size <= 70) {
+                  setSize(size + 1);
+                }
               }}
-            />
-          </TouchableOpacity>
-          <AppText font={font}>Font Size</AppText>
-          <TouchableOpacity
-            onPress={() => {
-              if (size >= 10) {
-                setSize(size - 1);
-              }
-            }}
-          >
-            <Entypo
-              name="chevron-down"
-              size={40}
-              color="#4d5156"
-              style={{
-                position: "relative",
-                top: -5,
+            >
+              <Entypo
+                name="chevron-up"
+                size={40}
+                color="#4d5156"
+                style={{
+                  position: "relative",
+                  top: 8,
+                }}
+              />
+            </TouchableOpacity>
+            <AppText font={font}>Font Size</AppText>
+            <TouchableOpacity
+              onPress={() => {
+                if (size >= 10) {
+                  setSize(size - 1);
+                }
               }}
-            />
-          </TouchableOpacity>
+            >
+              <Entypo
+                name="chevron-down"
+                size={40}
+                color="#4d5156"
+                style={{
+                  position: "relative",
+                  top: -5,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       <View style={styles.sample}>
@@ -151,12 +194,10 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
   },
   settings: {
     alignItems: "center",
-    backgroundColor: "#fff",
     paddingTop: 10,
     paddingBottom: 0,
     paddingLeft: 20,
@@ -164,14 +205,16 @@ const styles = StyleSheet.create({
     width: `100%`,
   },
   controls: {
-    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
+    marginTop: 10,
+    width: "100%",
+  },
+  controlsInner: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: -10,
-    width: "100%",
   },
   controlItems: {
     display: "flex",
@@ -200,11 +243,20 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
+  theme: state.theme,
   font: state.font,
   size: state.size,
 });
 
 const mapDispatchToProps = {
+  setTheme(theme) {
+    return {
+      type: "SET_THEME",
+      payload: {
+        theme,
+      },
+    };
+  },
   setFont(font) {
     return {
       type: "SET_FONT",

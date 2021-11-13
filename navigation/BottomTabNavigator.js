@@ -15,7 +15,13 @@ import CREEDS from "../constants/creeds";
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Catechisms";
 
-function BottomTabNavigator({ catechism, confession, navigation, route }) {
+function BottomTabNavigator({
+  theme,
+  catechism,
+  confession,
+  navigation,
+  route,
+}) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
@@ -43,6 +49,10 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
           tabBarIcon: ({ focused }) => {
             return <TabBarIcon focused={focused} name="bubbles" />;
           },
+          headerStyle: {
+            backgroundColor: theme === "Dark" ? "#000" : "#fff",
+          },
+          headerTintColor: theme === "Dark" ? "#fff" : "#000",
         }}
       />
       <BottomTab.Screen
@@ -53,6 +63,10 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
           tabBarIcon: ({ focused }) => {
             return <TabBarIcon focused={focused} name="open-book" />;
           },
+          headerStyle: {
+            backgroundColor: theme === "Dark" ? "#000" : "#fff",
+          },
+          headerTintColor: theme === "Dark" ? "#fff" : "#000",
         }}
       />
       <BottomTab.Screen
@@ -63,6 +77,10 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
           tabBarIcon: ({ focused }) => {
             return <TabBarIcon focused={focused} name="format-font" />;
           },
+          headerStyle: {
+            backgroundColor: theme === "Dark" ? "#000" : "#fff",
+          },
+          headerTintColor: theme === "Dark" ? "#fff" : "#000",
         }}
       />
       <BottomTab.Screen
@@ -73,6 +91,10 @@ function BottomTabNavigator({ catechism, confession, navigation, route }) {
           tabBarIcon: ({ focused }) => {
             return <TabBarIcon focused={focused} name="info" />;
           },
+          headerStyle: {
+            backgroundColor: theme === "Dark" ? "#000" : "#fff",
+          },
+          headerTintColor: theme === "Dark" ? "#fff" : "#000",
         }}
       />
     </BottomTab.Navigator>
@@ -103,6 +125,7 @@ function getHeaderTitle(route, catechism, confession) {
 }
 
 const mapStateToProps = (state) => ({
+  theme: state.theme,
   catechism: state.catechism,
   confession: state.confession,
 });

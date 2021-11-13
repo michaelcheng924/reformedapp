@@ -1,11 +1,26 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Text } from "react-native";
 
-const AppText = ({ bold, children, color, font, size = 16, style }) => {
+const AppText = ({
+  forceColor,
+  theme,
+  bold,
+  children,
+  color,
+  font,
+  size = 16,
+  style,
+}) => {
   return (
     <Text
       style={{
-        color: color || "#4d5156",
+        color:
+          (color
+            ? theme === "Dark" && !forceColor
+              ? "#b3e5fc"
+              : color
+            : color) || (theme === "Dark" ? "#fff" : "#4d5156"),
         fontFamily: `${font}${bold ? "-bold" : ""}`,
         fontSize: size || 16,
         lineHeight: size + size / 2,
@@ -17,4 +32,8 @@ const AppText = ({ bold, children, color, font, size = 16, style }) => {
   );
 };
 
-export default AppText;
+const mapStateToProps = (state) => ({
+  theme: state.theme,
+});
+
+export default connect(mapStateToProps)(AppText);

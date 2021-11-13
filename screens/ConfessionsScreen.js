@@ -21,6 +21,7 @@ import ReadCreed from "../components/ReadCreed";
 let scrollView;
 
 function ConfessionsScreen({
+  theme,
   confession,
   font,
   setConfession,
@@ -303,7 +304,13 @@ function ConfessionsScreen({
   }
 
   return (
-    <ScrollView ref={(node) => (scrollView = node)} style={styles.container}>
+    <ScrollView
+      ref={(node) => (scrollView = node)}
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
+    >
       <View>
         <Modal
           isVisible={selectConfession}
@@ -312,6 +319,7 @@ function ConfessionsScreen({
           }}
         >
           <ChangeConfession
+            theme={theme}
             confession={confession}
             font={font}
             setConfession={setConfession}
@@ -327,6 +335,7 @@ function ConfessionsScreen({
           }}
         >
           <ChangeChapter
+            theme={theme}
             chapterIndex={chapterIndex}
             selectedConfession={selectedConfession}
             font={font}
@@ -337,6 +346,7 @@ function ConfessionsScreen({
           />
         </Modal>
         <ScripturesModal
+          theme={theme}
           font={font}
           setScriptures={setScriptures}
           size={size}
@@ -421,7 +431,6 @@ function ConfessionsScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   contentContainer: {
     flex: 1,
@@ -441,6 +450,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
+  theme: state.theme,
   confession: state.confession,
   font: state.font,
   size: state.size,

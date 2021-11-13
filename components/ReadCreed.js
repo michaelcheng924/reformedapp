@@ -40,6 +40,7 @@ const ReadCreed = ({
           }}
         >
           <ChangeConfession
+            theme={theme}
             confession={confession}
             font={font}
             setConfession={setConfession}

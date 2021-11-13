@@ -6,6 +6,7 @@ import CATECHISMS from "../constants/catechisms";
 import AppText from "../components/AppText";
 
 const ChangeCatechism = ({
+  theme,
   catechism,
   font,
   setCatechism,
@@ -14,7 +15,12 @@ const ChangeCatechism = ({
   size,
 }) => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
+    >
       <TouchableOpacity
         onPress={() => {
           setSelectCatechism(false);
@@ -107,9 +113,7 @@ const ChangeCatechism = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-  },
+  container: {},
   contentContainer: {
     flex: 1,
   },

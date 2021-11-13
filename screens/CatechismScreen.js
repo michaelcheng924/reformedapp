@@ -25,6 +25,7 @@ function getStrippedText(text) {
 }
 
 function CatechismScreen({
+  theme,
   catechism,
   font,
   setCatechism,
@@ -127,7 +128,10 @@ function CatechismScreen({
   return (
     <ScrollView
       ref={(node) => (scrollView = node)}
-      style={styles.container}
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
       contentContainerStyle={styles.contentContainer}
     >
       <View style={styles.selectedCatechism}>
@@ -138,6 +142,7 @@ function CatechismScreen({
           }}
         >
           <ChangeCatechism
+            theme={theme}
             catechism={catechism}
             font={font}
             setCatechism={setCatechism}
@@ -152,6 +157,7 @@ function CatechismScreen({
           untilStopped
         />
         <ScripturesModal
+          theme={theme}
           font={font}
           setScriptures={setScriptures}
           size={size}
@@ -250,6 +256,7 @@ function CatechismScreen({
             </View>
             {isAnswered ? null : (
               <AppTextInput
+                theme={theme}
                 font={font}
                 placeholder="Enter the answer here"
                 setValue={setAnswerValue}
@@ -264,10 +271,20 @@ function CatechismScreen({
             {answerStripped && !isAnswered ? (
               <View style={styles.answerGreenRed}>
                 <AppText font={font}>
-                  <AppText bold color="green" font={font}>
+                  <AppText
+                    bold
+                    color={theme === "Dark" ? "lightgreen" : "green"}
+                    forceColor
+                    font={font}
+                  >
                     {answerStripped.slice(0, correctLastIndex + 1)}
                   </AppText>
-                  <AppText bold color="red" font={font}>
+                  <AppText
+                    bold
+                    color={theme === "Dark" ? "pink" : "red"}
+                    forceColor
+                    font={font}
+                  >
                     {answerStripped.slice(correctLastIndex + 1)}
                   </AppText>
                 </AppText>
@@ -491,7 +508,12 @@ function CatechismScreen({
                         paddingBottom: 4,
                       }}
                     >
-                      <AppText color="#fff" bold font={font} size={size}>
+                      <AppText
+                        color={theme === "Dark" ? "#000" : "#fff"}
+                        bold
+                        font={font}
+                        size={size}
+                      >
                         Next Question
                       </AppText>
                       <Entypo
@@ -532,7 +554,6 @@ function CatechismScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   contentContainer: {
     alignItems: "center",
@@ -600,6 +621,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
+  theme: state.theme,
   catechism: state.catechism,
   font: state.font,
   size: state.size,

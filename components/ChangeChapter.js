@@ -5,6 +5,7 @@ import { Entypo } from "@expo/vector-icons";
 import AppText from "./AppText";
 
 const ChangeChapter = ({
+  theme,
   chapterIndex,
   selectedConfession,
   font,
@@ -13,7 +14,12 @@ const ChangeChapter = ({
   size,
 }) => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
+    >
       <TouchableOpacity
         onPress={() => {
           setSelectChapter(false);
@@ -61,9 +67,7 @@ const ChangeChapter = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-  },
+  container: {},
   contentContainer: {
     flex: 1,
   },

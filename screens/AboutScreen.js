@@ -10,10 +10,13 @@ import {
 
 import AppText from "../components/AppText";
 
-const SettingsScreen = ({ font, setFont, setSize, size }) => {
+const SettingsScreen = ({ theme, font, setFont, setSize, size }) => {
   return (
     <ScrollView
-      style={styles.container}
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
       contentContainerStyle={styles.contentContainer}
     >
       <View>
@@ -87,7 +90,6 @@ const SettingsScreen = ({ font, setFont, setSize, size }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
   },
   contentContainer: {
@@ -105,6 +107,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
+  theme: state.theme,
   font: state.font,
   size: state.size,
 });

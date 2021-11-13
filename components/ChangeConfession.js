@@ -8,6 +8,7 @@ import CREEDS from "../constants/creeds";
 import AppText from "./AppText";
 
 const ChangeConfession = ({
+  theme,
   confession,
   font,
   setConfession,
@@ -16,7 +17,12 @@ const ChangeConfession = ({
   size,
 }) => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={{
+        ...styles.container,
+        backgroundColor: theme === "Dark" ? "#000" : "#fff",
+      }}
+    >
       <TouchableOpacity
         onPress={() => {
           setSelectConfession(false);
@@ -153,9 +159,7 @@ const ChangeConfession = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-  },
+  container: {},
   contentContainer: {
     flex: 1,
   },
