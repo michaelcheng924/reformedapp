@@ -3,7 +3,7 @@
     "name": "ReformedApp",
     "slug": "learn-reformed",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.12",
+    "version": "1.0.13",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -25,7 +25,7 @@
     },
     "android": {
       "package": "com.catechismsandmore",
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
